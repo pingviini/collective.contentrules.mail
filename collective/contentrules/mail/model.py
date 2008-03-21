@@ -1,0 +1,50 @@
+# -*- coding: utf-8 -*-
+# Copyright (c) 2008 Ingeniweb
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program; see the file COPYING. If not, write to the
+# Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+from zope.interface import implements
+from zope.schema import getFieldsInOrder
+
+from collective.contentrules.mail.interfaces import IMailModel
+from collective.contentrules.mail.interfaces import IMailReplacer
+from collective.contentrules.mail import MessageFactory as _
+
+class MailModel(object):
+    """Basic model for all objects implementing IPortalContent"""
+
+    implements(IMailModel)
+
+    title = _(u"Standard model for plone content",)
+    replacer_interface = IMailReplacer
+
+    @property
+    def help(self):
+        fields = []
+        # List of variables provided by replacer interface
+        for name, field in getFieldsInOrder(self.replacer_interface):
+            fields.append((name, field))
+
+        # Create help text
+        help = _(u"The following variables can be used in source, recipients, "\
+            "subject and text fields:",)
+
+        help += u"\n"
+
+        for name, field in fields:
+            help += _(u"${name}: ${title}\n",
+                mapping={u'name': name, u'title': field.title},)
+
+        return help

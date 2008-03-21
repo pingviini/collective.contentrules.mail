@@ -1,0 +1,27 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:five="http://namespaces.zope.org/five"
+    i18n_domain="collective.contentrules.mail">
+
+  <include package="plone.app.contentrules" />
+
+  <utility
+    component=".vocabulary.ModelVocabularyFactory"
+    name="collective.contentrules.mail.vocabulary.model"
+    />
+
+  <utility
+    component=".vocabulary.MimetypeVocabularyFactory"
+    name="collective.contentrules.mail.vocabulary.mimetype"
+    />
+
+  <utility
+    factory=".model.MailModel"
+    name="collective.contentrules.mail.model.base"
+    />
+
+  <adapter factory=".adapter.MailReplacer" />
+
+  <include package=".actions" />
+
+</configure>
