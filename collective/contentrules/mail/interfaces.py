@@ -51,3 +51,7 @@ class IMailReplacer(Interface):
     owner_id = TextLine(title=_(u"Login of content ower",))
 
     owner_fullname = TextLine(title=_(u"Fullname of content owner",))
+
+    default_from_email = TextLine(title=_(u"Email address of default sender",))
+
+    default_from_name = TextLine(title=_(u"Fullname of default sender",))

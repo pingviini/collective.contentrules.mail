@@ -34,6 +34,7 @@ class MailReplacer(object):
     def __init__(self, context):
         self.context = context
         self.utool = getToolByName(context, "portal_url")
+        self.portal = self.utool.getPortalObject()
         self.mtool = getToolByName(context, "portal_membership")
 
     @property
@@ -75,3 +76,11 @@ class MailReplacer(object):
 
         # Returns fullname
         return owner.getProperty('fullname')
+
+    @property
+    def default_from_email(self):
+        return self.portal.getProperty('email_from_address')
+
+    @property
+    def default_from_name(self):
+        return self.portal.getProperty('email_from_name', 'Administrator')
