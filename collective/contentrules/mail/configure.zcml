@@ -1,7 +1,10 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
     xmlns:five="http://namespaces.zope.org/five"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     i18n_domain="collective.contentrules.mail">
+
+  <five:registerPackage package="." />
 
   <include package="plone.app.contentrules" />
 
@@ -23,5 +26,15 @@
   <adapter factory=".adapter.MailReplacer" />
 
   <include package=".actions" />
+  <include package=".browser" />
+
+  <genericsetup:registerProfile
+    name="default"
+    title="collective.contentrules.mail"
+    description="Add mail content rules"
+    directory="profiles/default"
+    provides="Products.GenericSetup.interfaces.EXTENSION"
+    for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+  />
 
 </configure>

@@ -28,7 +28,7 @@ class IMailModel(Interface):
     replacer_interface = Attribute(u"Interface providing word substitution in "\
         "mail fields: source, recipients, subject, text")
 
-    help = Attribute(u"Help text exposing all variables provided by replacer"\
+    fields = Attribute(u"Help text exposing all variables provided by replacer"\
         "interface")
 
 class IMailReplacer(Interface):

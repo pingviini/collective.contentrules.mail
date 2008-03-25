@@ -20,6 +20,7 @@ from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 from zope.app.schema.vocabulary import IVocabularyFactory
 
 from collective.contentrules.mail.interfaces import IMailModel
+from collective.contentrules.mail import MessageFactory as _
 
 class ModelVocabulary(object):
     """Vocabulary factory listing all mail models
@@ -51,10 +52,10 @@ class MimetypeVocabulary(object):
         terms = (
             SimpleTerm(
                 u"plain",
-                title=u("text/plain",)),
+                title=_(u"text/plain",)),
             SimpleTerm(
                 u"html",
-                title=u("text/html",)),
+                title=_(u"text/html",)),
             )
 
         return SimpleVocabulary(terms)

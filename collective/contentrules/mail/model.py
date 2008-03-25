@@ -31,20 +31,11 @@ class MailModel(object):
     replacer_interface = IMailReplacer
 
     @property
-    def help(self):
+    def fields(self):
         fields = []
+
         # List of variables provided by replacer interface
         for name, field in getFieldsInOrder(self.replacer_interface):
-            fields.append((name, field))
+            fields.append((name, field.title))
 
-        # Create help text
-        help = _(u"The following variables can be used in source, recipients, "\
-            "subject and text fields:",)
-
-        help += u"\n"
-
-        for name, field in fields:
-            help += _(u"${name}: ${title}\n",
-                mapping={u'name': name, u'title': field.title},)
-
-        return help
+        return fields

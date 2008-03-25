@@ -35,6 +35,7 @@ from plone.contentrules.rule.interfaces import IRuleElementData
 from plone.contentrules.rule.interfaces import IExecutable
 
 from collective.contentrules.mail import MessageFactory as _
+from collective.contentrules.mail.browser.widget import ModelWidget
 from collective.contentrules.mail.interfaces import IMailModel
 
 class IMailAction(Interface):
@@ -182,7 +183,7 @@ class MailAddForm(AddForm):
     An add form for the mail action
     """
     form_fields = form.FormFields(IMailAction)
-    #form_fields['model_description'].custom_widget = DisplayWidget
+    form_fields['model'].custom_widget = ModelWidget
     label = _(u"Add Mail Action")
     description = _(u"A mail action can mail different recipient.")
     form_name = _(u"Configure element")
@@ -197,6 +198,7 @@ class MailEditForm(EditForm):
     An edit form for the mail action
     """
     form_fields = form.FormFields(IMailAction)
+    form_fields['model'].custom_widget = ModelWidget
     label = _(u"Edit Mail Action")
     description = _(u"A mail action can mail different recipient.")
     form_name = _(u"Configure element")
