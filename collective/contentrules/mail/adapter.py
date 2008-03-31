@@ -36,6 +36,37 @@ class MailReplacer(object):
         self.utool = getToolByName(context, "portal_url")
         self.portal = self.utool.getPortalObject()
         self.mtool = getToolByName(context, "portal_membership")
+        self.wtool = getToolByName(context, "portal_workflow")
+        self.acl_users = getToolByName(context, "acl_users")
+
+    def _getRoleEmails(self, roles):
+        # Returns a list of emails for users having the specified roles
+        # @param roles: Set of roles
+        roles = set(roles)
+        local_roles = self.acl_users.getAllLocalRoles(self.context)
+        emails = []
+
+        for user_id, user_roles in local_roles.items():
+            if not roles.intersection(user_roles):
+                continue
+
+            member = self.mtool.getMemberById(user_id)
+            email = member.getProperty('email', None)
+
+            if email is None or email in emails:
+                continue
+
+            emails.append(email)
+
+        return emails
+
+    @property
+    def owner_emails(self):
+        return ", ".join(self._getRoleEmails(['Owner']))
+
+    @property
+    def review_state(self):
+        return self.wtool.getInfoFor(self.context, "review_state")
 
     @property
     def id(self):

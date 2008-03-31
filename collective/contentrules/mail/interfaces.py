@@ -52,6 +52,11 @@ class IMailReplacer(Interface):
 
     owner_fullname = TextLine(title=_(u"Fullname of content owner",))
 
+    owner_emails = TextLine(
+        title=_(u"Emails of users having Owner role on content",))
+
     default_from_email = TextLine(title=_(u"Email address of default sender",))
 
     default_from_name = TextLine(title=_(u"Fullname of default sender",))
+
+    review_state = TextLine(title=_(u"State of content",))
