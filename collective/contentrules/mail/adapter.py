@@ -36,6 +36,7 @@ class MailReplacer(object):
         self.utool = getToolByName(context, "portal_url")
         self.portal = self.utool.getPortalObject()
         self.mtool = getToolByName(context, "portal_membership")
+        self.gtool = getToolByName(context, "portal_groups")
         self.wtool = getToolByName(context, "portal_workflow")
         self.acl_users = getToolByName(context, "acl_users")
 
@@ -46,17 +47,34 @@ class MailReplacer(object):
         local_roles = self.acl_users.getAllLocalRoles(self.context)
         emails = []
 
-        for user_id, user_roles in local_roles.items():
-            if not roles.intersection(user_roles):
+        for item_id, item_roles in local_roles.items():
+            # Check if local roles has those that we wanted to extract
+            if not roles.intersection(item_roles):
                 continue
 
-            member = self.mtool.getMemberById(user_id)
-            email = member.getProperty('email', None)
+            # Get all members
+            members = []
 
-            if email is None or email in emails:
-                continue
+            # item_id could be a user or a a group
+            member = self.mtool.getMemberById(item_id)
 
-            emails.append(email)
+            if member is not None:
+                members.append(member)
+            else:
+                # Member does not exist. Check if it is a group
+                group = self.gtool.getGroupById(item_id)
+
+                if group is not None:
+                    members.extend(group.getGroupMembers())
+
+            # Get all emails from fetched members
+            for member in members:
+                email = member.getProperty('email', None)
+
+                if email is None or email in emails:
+                    continue
+
+                emails.append(email)
 
         return emails
 

@@ -35,6 +35,7 @@ from plone.contentrules.rule.interfaces import IRuleElementData
 from plone.contentrules.rule.interfaces import IExecutable
 
 from collective.contentrules.mail import MessageFactory as _
+from collective.contentrules.mail import LOG
 from collective.contentrules.mail.browser.widget import ModelWidget
 from collective.contentrules.mail.interfaces import IMailModel
 
@@ -135,7 +136,28 @@ class MailActionExecutor(object):
         message = substitute(self.element.message)
 
         # Process recipients
-        recipient_lists = [str(mail.strip()) for mail in recipients.split(',')]
+        recipient_list = []
+
+        for email in recipients.split(','):
+            email = email.strip()
+
+            if not email:
+                # Remove empty address
+                continue
+
+            if email in recipient_list:
+                # Remove doubles
+                continue
+
+            recipient_list.append(email)
+
+        if not recipient_list:
+            # Because there are no recipients, do not send email
+            LOG.info(u"""Do not send email "%s": no recipients defined.""" %
+                     model.title)
+            return False
+
+        recipients = ",".join(recipient_list)
 
         # Process source
         utool = getToolByName(aq_inner(self.context), "portal_url")
