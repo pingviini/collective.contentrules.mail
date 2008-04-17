@@ -125,13 +125,11 @@ class MailActionExecutor(object):
 
         # Apply word substitution on every mail fields
         def substitute(text):
-            if not text:
-                return text
             for word_id in word_ids:
                 text = text.replace("${%s}" % word_id, words[word_id])
 
             return text
-
+        
         source = substitute(self.element.source)
         recipients = substitute(self.element.recipients)
         subject = substitute(self.element.subject)
