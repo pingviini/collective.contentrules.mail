@@ -61,13 +61,13 @@ class IMailAction(Interface):
     source = TextLine(
         title=_(u"Email source"),
         description=_("The email address that sends the email. If no email is"\
-                      "provided here, it will use the portal from address."),
+                      " provided here, it will use the portal from address."),
         required=False)
 
     recipients = TextLine(
         title=_(u"Email recipients"),
         description=_("The email where you want to send this message. To send"\
-            "it to different email addresses, just separate them with ,"),
+            " it to different email addresses, just separate them with commas."),
         required=True)
 
     message = Text(

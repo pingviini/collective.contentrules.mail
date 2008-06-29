@@ -19,7 +19,7 @@ setup(name='collective.contentrules.mail',
       url='https://svn.plone.org/svn/collective/collective.contentrules.mail',
       license='GPL',
       packages=find_packages(exclude=['ez_setup']),
-      namespace_packages=['collective'],
+      namespace_packages=['collective','collective.contentrules'],
       include_package_data=True,
       zip_safe=False,
       install_requires=[
