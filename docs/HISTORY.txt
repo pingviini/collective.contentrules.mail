@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.2 - Unreleased
+----------------
+
+* Fixes actions/configure.zcml in order to play nice with GenericSetup
+
+
 0.1 - Unreleased
 ----------------
 

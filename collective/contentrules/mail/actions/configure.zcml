@@ -29,6 +29,8 @@
          event="zope.component.interfaces.IObjectEvent"
          addview="collective.contentrules.mail.actions.Mail"
          editview="edit"
+         schema=".mail.IMailAction"
+         factory=".mail.MailAction"
          />
 
 </configure>
