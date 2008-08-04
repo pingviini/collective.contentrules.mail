@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = = open(os.path.join("collective", "contentrules", "mail", "version.txt")).read().strip()
+version = open(os.path.join("collective", "contentrules", "mail", "version.txt")).read().strip()
 
 setup(name='collective.contentrules.mail',
       version=version,
