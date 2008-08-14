@@ -44,38 +44,45 @@ class MailReplacer(object):
         # Returns a list of emails for users having the specified roles
         # @param roles: Set of roles
         roles = set(roles)
-        local_roles = self.acl_users.getAllLocalRoles(self.context)
+        local_roles = self.acl_users._getAllLocalRoles(self.context)
         emails = []
+        
+        for role in roles:
+            members = self.acl_users.portal_role_manager.listAssignedPrincipals(role)
+            for member_id in members:
+                emails += self._getPrincipalEmail(member_id)
 
         for item_id, item_roles in local_roles.items():
             # Check if local roles has those that we wanted to extract
             if not roles.intersection(item_roles):
                 continue
+            
+            emails += self._getPrincipalEmail(item_id)
+        
+        return set(emails)
+    
+    def _getPrincipalEmail(self, principal_id):
+        emails = set()
+        members = set()
+        member = self.mtool.getMemberById(principal_id)
 
-            # Get all members
-            members = []
+        if member is not None:
+            members.add(member)
+        else:
+            # Member does not exist. Check if it is a group
+            group = self.gtool.getGroupById(principal_id)
 
-            # item_id could be a user or a a group
-            member = self.mtool.getMemberById(item_id)
+            if group is not None:
+                members = members.union(group.getGroupMembers())
 
-            if member is not None:
-                members.append(member)
-            else:
-                # Member does not exist. Check if it is a group
-                group = self.gtool.getGroupById(item_id)
+        # Get all emails from fetched members
+        for member in members:
+            email = member.getProperty('email', None)
+            if not email:
+                continue
 
-                if group is not None:
-                    members.extend(group.getGroupMembers())
-
-            # Get all emails from fetched members
-            for member in members:
-                email = member.getProperty('email', None)
-
-                if email is None or email in emails:
-                    continue
-
-                emails.append(email)
-
+            emails.add(email)
+        
         return emails
 
     @property
