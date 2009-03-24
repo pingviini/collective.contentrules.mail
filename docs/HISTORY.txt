@@ -4,6 +4,20 @@ Changelog
 0.2 - Unreleased
 ----------------
 
+* Made the executor fail gracefully if the content being acted upon is not
+  adaptable to the replacer interface.
+  [optilude]
+
+* Made the default replacer adapt any Dublin Core-capable content, avoiding
+  an unnecessary dependency on Archetypes.
+  [optilude]
+
+* Made the default IMailModel implementation more re-usable.
+  [optildue]
+
+* Updated documentation and interface specifications.
+  [optilude]
+
 * Fixes actions/configure.zcml in order to play nice with GenericSetup
 
 

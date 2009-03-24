@@ -19,7 +19,7 @@
     />
 
   <utility
-    factory=".model.MailModel"
+    component=".model.DefaultMailModel"
     name="collective.contentrules.mail.model.base"
     />
 

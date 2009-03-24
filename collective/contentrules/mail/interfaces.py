@@ -15,25 +15,45 @@
 # along with this program; see the file COPYING. If not, write to the
 # Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 from zope.interface import Interface
-from zope.interface import Attribute
-from zope.schema import TextLine
+from zope.schema import TextLine, Object, List, Tuple
 
 from collective.contentrules.mail import MessageFactory as _
 
 class IMailModel(Interface):
-    """A named utility providing a mail model"""
+    """A named utility providing a mail model.
+    
+    The mail content rule will allow the user ot pick a mail model based on
+    a vocabulary of all named utilities providing this interface. When the
+    content rule action is executed, the object being acted upon will be
+    adapted to the interface specified under `replacer_interface`.
+    Substitutions will then be made based on variables matching field names
+    (e.g. "${foobar}" matches the `foobar` field). The substituted values
+    are obtained from the adapter.
+    """
 
     title = TextLine(title=_(u"A friendly name for model",))
 
-    replacer_interface = Attribute(u"Interface providing word substitution in "\
-        "mail fields: source, recipients, subject, text")
+    replacer_interface = Object(
+        title=_(u"Mail replacer schema"),
+        description=_(u"Interface providing word substitution in "\
+                        "mail fields: source, recipients, subject, text"),
+        schema=Interface)
 
-    fields = Attribute(u"Help text exposing all variables provided by replacer"\
-        "interface")
+    fields = List(
+        title=_(u"Fields help text"),
+        description=_(u"Exposes the variables provided by the replacer"),
+        value_type=Tuple(title=_(u"Pair of (key, help text,)"),
+                         value_type=TextLine(title=_(u"Name or help text"))))
 
 class IMailReplacer(Interface):
     """Interface providing variables which can be used in mail fields:
-    source, recipients, subject, text"""
+    source, recipients, subject, text. This is the default implementation,
+    which should work on any CMF content providing the IDublinCore interface.
+    
+    It is possible to extend this with other attributes and provide a new
+    IMailModel utility with a different interface provided as the
+    `replacer_interface`.
+    """
 
     id = TextLine(title=_(u"Id of content",))
 

@@ -23,12 +23,17 @@ from collective.contentrules.mail.interfaces import IMailReplacer
 from collective.contentrules.mail import MessageFactory as _
 
 class MailModel(object):
-    """Basic model for all objects implementing IPortalContent"""
+    """A mail model described by interface.
+    
+    Create instances of this (as shown for DefaultMailModel below) and
+    register these as unique named utilities providing IMailModel.
+    """
 
     implements(IMailModel)
 
-    title = _(u"Standard model for plone content",)
-    replacer_interface = IMailReplacer
+    def __init__(self, title, replacer_interface):
+        self.title = title
+        self.replacer_interface = replacer_interface
 
     @property
     def fields(self):
@@ -39,3 +44,7 @@ class MailModel(object):
             fields.append((name, field.title))
 
         return fields
+
+# The default mail model, which uses the default mail replacer.
+DefaultMailModel = MailModel(title=_(u"Standard model for plone content"),
+                             replacer_interface=IMailReplacer)

@@ -15,13 +15,11 @@
 # along with this program; see the file COPYING. If not, write to the
 # Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-from zope.interface import Interface
 from zope.interface import implements
 from zope.component import adapts
 
 from Products.CMFCore.utils import getToolByName
-
-from Products.Archetypes.interfaces import IBaseObject
+from Products.CMFCore.interfaces import IDublinCore
 
 from collective.contentrules.mail.interfaces import IMailReplacer
 
@@ -29,7 +27,7 @@ class MailReplacer(object):
     """Provides attributes which can be used in a mail model"""
 
     implements(IMailReplacer)
-    adapts(IBaseObject)
+    adapts(IDublinCore)
 
     def __init__(self, context):
         self.context = context

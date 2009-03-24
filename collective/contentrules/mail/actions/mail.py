@@ -116,7 +116,11 @@ class MailActionExecutor(object):
         replacer_interface = model.replacer_interface
 
         # Extract all variables from this replacer
-        replacer = replacer_interface(obj)
+        replacer = replacer_interface(obj, None)
+        if replacer is None:
+            LOG.debug(u"Could not send email. The replacer is not applicable for this type of object.")
+            return False
+        
         word_ids = [k for k, v in getFieldsInOrder(replacer_interface)]
         words = {}
 
