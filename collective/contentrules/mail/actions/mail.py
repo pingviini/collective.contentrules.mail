@@ -134,7 +134,9 @@ class MailActionExecutor(object):
 
             return text
         
-        source = substitute(self.element.source)
+        source = self.element.source
+        if source:
+            source = substitute(self.element.source)
         recipients = substitute(self.element.recipients)
         subject = substitute(self.element.subject)
         message = substitute(self.element.message)
