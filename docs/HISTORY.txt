@@ -1,8 +1,8 @@
 Changelog
 =========
 
-0.3
----
+0.3 - 2009/03/24
+----------------
 
 * Added a note in the UI about how to use variables.
   [optilude]
