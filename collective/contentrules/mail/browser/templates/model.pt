@@ -1,6 +1,7 @@
 <div i18n:domain="collective.contentrules.mail">
 <p i18n:translate="description_model_help">
 The following variables can be used in source, recipients, subject and text fields:
+Variables can be inserted by using a marker like ${variable_name}.
 </p>
 <ul tal:define="fields options/fields">
   <tal:block tal:repeat="field fields">
