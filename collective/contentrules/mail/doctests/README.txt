@@ -86,13 +86,29 @@ First create a dummy mail host to simulate mail sent::
     >>> isinstance(mailhost, DummySecureMailHost)
     True
 
-Then create a dummy folder in portal::
+Create four users ::
 
-    >>> self.setRoles(('Manager',))
     >>> membership = self.portal.portal_membership
     >>> membership.addMember('dummy', 'secret', 'Manager', [])
     >>> dummy_member = membership.getMemberById('dummy')
-    >>> dummy_member.setMemberProperties({'fullname': 'dummy fullname',})
+    >>> dummy_member.setMemberProperties({'fullname': 'dummy fullname',
+    ...                                   'email':'dummy@foo.com'})
+    >>> membership.addMember('dummy2', 'secret', 'Contributor', [])
+    >>> dummy2_member = membership.getMemberById('dummy2')
+    >>> dummy2_member.setMemberProperties({'fullname': 'dummy2 fullname',
+    ...                                    'email':'dummy2@foo.com'})
+    >>> membership.addMember('dummy3', 'secret', 'Reviewer', [])
+    >>> dummy3_member = membership.getMemberById('dummy3')
+    >>> dummy3_member.setMemberProperties({'fullname': 'dummy3 fullname',
+    ...                                    'email':'dummy3@foo.com'})
+    >>> membership.addMember('dummy4', 'secret', 'Editor', [])
+    >>> dummy4_member = membership.getMemberById('dummy4')
+    >>> dummy4_member.setMemberProperties({'fullname': 'dummy4 fullname',
+    ...                                    'email':'dummy4@foo.com'})
+
+Then create a dummy folder in portal::
+
+    >>> self.setRoles(('Manager',))
     >>> self.portal.invokeFactory(type_name='Folder', id='folder', title='Foo folder', description='Foo description')
     'folder'
     >>> self.portal.folder
@@ -100,6 +116,12 @@ Then create a dummy folder in portal::
     >>> self.portal.folder.setCreators(['dummy'])
     >>> self.portal.folder.Creator()
     'dummy'
+
+Assign local roles on dummy folder so we can test our content rule::
+
+    >>> self.portal.folder.manage_setLocalRoles('dummy2', ['Contributor'])
+    >>> self.portal.folder.manage_setLocalRoles('dummy3', ['Reviewer'])
+    >>> self.portal.folder.manage_setLocalRoles('dummy4', ['Editor'])
 
 And finally execute mail action on this dummy folder::
 
@@ -142,23 +164,19 @@ Previous email actions were very basic : mail actions provides also word subsitu
 Email action uses IEmailReplacer adapter on each triggered event object to extract some variables.
 
     >>> from collective.contentrules.mail.interfaces import IMailReplacer
+    >>> self.setRoles(('Member',))
     >>> replacer = IMailReplacer(self.portal.folder)
-    >>> replacer.id
-    'folder'
-    >>> replacer.title
-    'Foo folder'
-    >>> replacer.description
-    'Foo description'
-    >>> replacer.url
-    'http://nohost/plone/folder'
-    >>> replacer.relative_url
-    'folder'
-    >>> replacer.portal_url
-    'http://nohost/plone'
-    >>> replacer.owner_id
-    'dummy'
-    >>> replacer.owner_fullname
-    'dummy fullname'
+    >>> self.failUnless(replacer.id == 'folder')
+    >>> self.failUnless(replacer.title == 'Foo folder')
+    >>> self.failUnless(replacer.description == 'Foo description')
+    >>> self.failUnless(replacer.url == 'http://nohost/plone/folder')
+    >>> self.failUnless(replacer.relative_url == 'folder')
+    >>> self.failUnless(replacer.portal_url == 'http://nohost/plone')
+    >>> self.failUnless(replacer.owner_id == 'dummy')
+    >>> self.failUnless(replacer.owner_fullname == 'dummy fullname')
+    >>> self.failUnless(replacer.contributor_emails == 'dummy2@foo.com')
+    >>> self.failUnless(replacer.reviewer_emails == 'dummy3@foo.com')
+    >>> self.failUnless(replacer.editor_emails == 'dummy4@foo.com')
 
 Execute email action with word substitution::
 

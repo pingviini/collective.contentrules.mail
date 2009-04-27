@@ -1,6 +1,22 @@
 Changelog
 =========
 
+0.4 - unreleased
+----------------
+
+* Added cc and bcc fields to IMailAction enabling the use of these fields in 
+  mail messages
+  [erico_andrei]
+
+* Added new variables to IMailReplacer so it is possible to send emails to 
+  users with other roles than owner on the object
+  [erico_andrei]
+
+* Made sure Archetypes content implements IDublinCore (It's not the default 
+  behavior until AT 1.5.10)
+  [erico_andrei]
+  
+
 0.3 - 2009/03/24
 ----------------
 

@@ -96,7 +96,7 @@ class TestGenericSetup(TestCase):
         self.assertEquals("collective.contentrules.mail.model.base", rule1.actions[0].model)
         self.assertEquals("html", rule1.actions[0].mimetype)
         self.assertEquals("${default_from_email}", rule1.actions[0].source)
-        self.assertEquals("${owner_email}", rule1.actions[0].recipients)
+        self.assertEquals("${owner_emails}", rule1.actions[0].recipients)
         self.assertEquals(u"Your content was modified", rule1.actions[0].subject)
         self.assertEquals(u"Your content ${title} was modified.", rule1.actions[0].message)
         
@@ -148,8 +148,10 @@ class TestGenericSetup(TestCase):
   <actions>
    <action type="collective.contentrules.mail.actions.Mail">
     <property name="mimetype">html</property>
+    <property name="recipients">${owner_emails}</property>
+    <property name="cc"></property>
+    <property name="bcc">${contributor_emails}</property>
     <property name="source">${default_from_email}</property>
-    <property name="recipients">${owner_email}</property>
     <property name="message">Your content ${title} was modified.</property>
     <property name="model">collective.contentrules.mail.model.base</property>
     <property name="subject">Your content was modified</property>
