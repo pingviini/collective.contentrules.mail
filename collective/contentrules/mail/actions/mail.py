@@ -70,6 +70,18 @@ class IMailAction(Interface):
             " it to different email addresses, just separate them with commas."),
         required=True)
 
+    cc = TextLine(
+        title=_(u"CC recipients"),
+        description=_("The email to receive a copy of this message. To send"\
+            " it to different email addresses, just separate them with commas."),
+        required=False)
+
+    bcc = TextLine(
+        title=_(u"BCC recipients"),
+        description=_("The email to receive a blind copy of this message. To"\
+     " send it to different email addresses, just separate them with commas."),
+        required=False)
+
     message = Text(
         title=_(u"Message"),
         description=_(u"Type in here the message that you want to mail."),
@@ -86,6 +98,8 @@ class MailAction(SimpleItem):
     subject = ''
     source = ''
     recipients = ''
+    cc = ''
+    bcc = ''
     message = ''
     
     element = 'collective.contentrules.mail.actions.Mail'
@@ -137,26 +151,27 @@ class MailActionExecutor(object):
         source = self.element.source
         if source:
             source = substitute(self.element.source)
-        recipients = substitute(self.element.recipients)
+        recipients = substitute(self.element.recipients)    
+        cc = substitute(self.element.cc)
+        bcc = substitute(self.element.bcc)
         subject = substitute(self.element.subject)
         message = substitute(self.element.message)
-
+        
+        def processRecipients(recipients=''):
+            address_list = []
+            for email in recipients.split(','):
+                email = email.strip()
+                if not email:
+                    # Remove empty address
+                    continue
+                address_list.append(email)
+            return address_list
+        
         # Process recipients
-        recipient_list = []
-
-        for email in recipients.split(','):
-            email = email.strip()
-
-            if not email:
-                # Remove empty address
-                continue
-
-            if email in recipient_list:
-                # Remove doubles
-                continue
-
-            recipient_list.append(email)
-
+        recipient_list = processRecipients(recipients)
+        cc_list = [e for e in processRecipients(cc) if email not in recipients]
+        bcc_list = [e for e in processRecipients(bcc) if email not in recipients]
+        
         if not recipient_list:
             # Because there are no recipients, do not send email
             LOG.info(u"""Do not send email "%s": no recipients defined.""" %
@@ -164,7 +179,9 @@ class MailActionExecutor(object):
             return False
 
         recipients = ",".join(recipient_list)
-
+        cc = ",".join(cc_list)
+        bcc = ",".join(bcc_list)
+        
         # Process source
         utool = getToolByName(aq_inner(self.context), "portal_url")
         portal = utool.getPortalObject()
@@ -189,6 +206,8 @@ action or enter an email in the portal properties"
         if email_charset != site_charset:
             source = source.decode(site_charset).encode(email_charset)
             recipients = recipients.decode(site_charset).encode(email_charset)
+            cc = cc.decode(site_charset).encode(email_charset)
+            bcc = bcc.decode(site_charset).encode(email_charset)
             subject = subject.decode(site_charset).encode(email_charset)
             message = message.decode(site_charset).encode(email_charset)
 
@@ -202,6 +221,7 @@ action or enter an email in the portal properties"
         mimetype = self.element.mimetype
         mailhost.secureSend(message, recipients, source,
                             subject=subject, subtype=mimetype,
+                            mcc=cc, mbcc=bcc,
                             charset=email_charset, debug=False,
                             From=source)
         return True
