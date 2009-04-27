@@ -20,7 +20,6 @@ from zope.component import adapts
 
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.interfaces import IDublinCore
-
 from collective.contentrules.mail.interfaces import IMailReplacer
 
 class MailReplacer(object):
@@ -86,6 +85,22 @@ class MailReplacer(object):
     @property
     def owner_emails(self):
         return ", ".join(self._getRoleEmails(['Owner']))
+    
+    @property
+    def reader_emails(self):
+        return ", ".join(self._getRoleEmails(['Reader']))
+
+    @property
+    def contributor_emails(self):
+        return ", ".join(self._getRoleEmails(['Contributor']))
+
+    @property
+    def editor_emails(self):
+        return ", ".join(self._getRoleEmails(['Editor']))
+    
+    @property
+    def reviewer_emails(self):
+        return ", ".join(self._getRoleEmails(['Reviewer']))
 
     @property
     def review_state(self):
