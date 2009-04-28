@@ -169,8 +169,8 @@ class MailActionExecutor(object):
         
         # Process recipients
         recipient_list = processRecipients(recipients)
-        cc_list = [e for e in processRecipients(cc) if email not in recipients]
-        bcc_list = [e for e in processRecipients(bcc) if email not in recipients]
+        cc_list = [e for e in processRecipients(cc) if e not in recipients]
+        bcc_list = [e for e in processRecipients(bcc) if e not in recipients]
         
         if not recipient_list:
             # Because there are no recipients, do not send email
