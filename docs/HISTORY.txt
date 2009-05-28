@@ -16,6 +16,7 @@ Changelog
   behavior until AT 1.5.10)
   [erico_andrei]
   
+* Correct action mail fail on try to replace bcc or cc when it returns None [lucmult]
 
 0.3 - 2009/03/24
 ----------------
