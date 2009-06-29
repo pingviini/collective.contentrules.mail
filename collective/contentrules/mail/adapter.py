@@ -18,6 +18,7 @@
 from zope.interface import implements
 from zope.component import adapts
 
+from Products.CMFCore.WorkflowTool import WorkflowException
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.interfaces import IDublinCore
 from collective.contentrules.mail.interfaces import IMailReplacer
@@ -104,7 +105,10 @@ class MailReplacer(object):
 
     @property
     def review_state(self):
-        return self.wtool.getInfoFor(self.context, "review_state")
+        try:
+            return self.wtool.getInfoFor(self.context, "review_state")
+        except WorkflowException, e:
+            return ''
 
     @property
     def id(self):

@@ -4,6 +4,10 @@ Changelog
 0.4 - unreleased
 ----------------
 
+* Caught workflow exception when trying to get state on object without any
+  workflow.
+  [tiazma]
+
 * Added cc and bcc fields to IMailAction enabling the use of these fields in 
   mail messages
   [erico_andrei]
