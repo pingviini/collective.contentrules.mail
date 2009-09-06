@@ -25,7 +25,7 @@ from zope.formlib import form
 from zope.schema import TextLine
 from zope.schema import Text
 from zope.schema import Choice
-from zope.schema import getFieldsInOrder
+from zope.schema import getFieldNamesInOrder
 
 from Products.CMFCore.utils import getToolByName
 
@@ -125,6 +125,13 @@ class MailActionExecutor(object):
         # Get event objet
         obj = self.event.object
 
+        utool = getToolByName(aq_inner(self.context), "portal_url")
+        portal = utool.getPortalObject()
+
+        site_properties = portal.portal_properties.site_properties
+        site_charset = site_properties.getProperty('default_charset')
+        email_charset = portal.getProperty('email_charset')
+
         # Get replacer interface from model
         model = getUtility(IMailModel, self.element.model)
         replacer_interface = model.replacer_interface
@@ -135,20 +142,21 @@ class MailActionExecutor(object):
             LOG.debug(u"Could not send email. The replacer is not applicable for this type of object.")
             return False
         
-        word_ids = [k for k, v in getFieldsInOrder(replacer_interface)]
         words = {}
-
-        for word_id in word_ids:
-            words[word_id] = getattr(replacer, word_id)
+        for word_id in getFieldNamesInOrder(replacer_interface):
+            replacement_value = getattr(replacer, word_id)
+            if isinstance(replacement_value, str):
+                replacement_value = replacement_value.decode(site_charset)
+            words[word_id] = replacement_value
 
         # Apply word substitution on every mail fields
         def substitute(text):
             if not text: return ""
 
-            for word_id in word_ids:
-                text = text.replace("${%s}" % word_id, words[word_id])
+            for word_id, replacement_value in words.items():
+                text = text.replace(u"${%s}" % word_id, replacement_value)
 
-            return text
+            return text.encode(site_charset)
         
         source = self.element.source
         if source:
@@ -185,9 +193,7 @@ class MailActionExecutor(object):
         bcc = ",".join(bcc_list)
         
         # Process source
-        utool = getToolByName(aq_inner(self.context), "portal_url")
-        portal = utool.getPortalObject()
-
+        
         if not source:
             # no source provided, looking for the site wide from email
             # address
@@ -201,10 +207,7 @@ action or enter an email in the portal properties"
             source = "%s <%s>" % (from_name, from_address)
 
         # Encode text using mail charset
-        site_properties = portal.portal_properties.site_properties
-        site_charset = site_properties.getProperty('default_charset')
-        email_charset = portal.getProperty('email_charset')
-
+        
         if email_charset != site_charset:
             source = source.decode(site_charset).encode(email_charset)
             recipients = recipients.decode(site_charset).encode(email_charset)

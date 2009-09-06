@@ -4,6 +4,9 @@ Changelog
 0.4 - unreleased
 ----------------
 
+* Avoid throwing an exception on encoded strings in the replacer.
+  [optilude]
+
 * Caught workflow exception when trying to get state on object without any
   workflow.
   [tiazma]

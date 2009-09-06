@@ -106,16 +106,21 @@ Create four users ::
     >>> dummy4_member.setMemberProperties({'fullname': 'dummy4 fullname',
     ...                                    'email':'dummy4@foo.com'})
 
+Make sure we won't barf on a non-ASCII string.
+
+    >>> self.portal._setProperty('default_charset', 'utf-8')
+
 Then create a dummy folder in portal::
 
     >>> self.setRoles(('Manager',))
-    >>> self.portal.invokeFactory(type_name='Folder', id='folder', title='Foo folder', description='Foo description')
+    >>> self.portal.invokeFactory(type_name='Folder', id='folder', title='Foo folder', description='A w\xc3\xb8rd')
     'folder'
     >>> self.portal.folder
     <ATFolder at .../folder>
     >>> self.portal.folder.setCreators(['dummy'])
     >>> self.portal.folder.Creator()
     'dummy'
+
 
 Assign local roles on dummy folder so we can test our content rule::
 
@@ -168,7 +173,7 @@ Email action uses IEmailReplacer adapter on each triggered event object to extra
     >>> replacer = IMailReplacer(self.portal.folder)
     >>> self.failUnless(replacer.id == 'folder')
     >>> self.failUnless(replacer.title == 'Foo folder')
-    >>> self.failUnless(replacer.description == 'Foo description')
+    >>> self.failUnless(replacer.description == 'A w\xc3\xb8rd')
     >>> self.failUnless(replacer.url == 'http://nohost/plone/folder')
     >>> self.failUnless(replacer.relative_url == 'folder')
     >>> self.failUnless(replacer.portal_url == 'http://nohost/plone')
