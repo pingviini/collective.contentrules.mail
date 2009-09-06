@@ -39,6 +39,9 @@ from collective.contentrules.mail import LOG
 from collective.contentrules.mail.browser.widget import ModelWidget
 from collective.contentrules.mail.interfaces import IMailModel
 
+from smtplib import SMTPException
+from Products.MailHost.MailHost import MailHostError
+
 class IMailAction(Interface):
     """Definition of the configuration available for a mail action
     """
@@ -224,11 +227,17 @@ action or enter an email in the portal properties"
                 "You must have a Mailhost utility to execute this action"
 
         mimetype = self.element.mimetype
-        mailhost.secureSend(message, recipients, source,
-                            subject=subject, subtype=mimetype,
-                            mcc=cc, mbcc=bcc,
-                            charset=email_charset, debug=False,
-                            From=source)
+        
+        try:
+            mailhost.secureSend(message, recipients, source,
+                                subject=subject, subtype=mimetype,
+                                mcc=cc, mbcc=bcc,
+                                charset=email_charset, debug=False,
+                                From=source)
+        except (MailHostError, SMTPException,), e:
+            LOG.exception(u"Failed to send mail")
+            return False
+        
         return True
 
 class MailAddForm(AddForm):

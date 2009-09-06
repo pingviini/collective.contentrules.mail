@@ -4,6 +4,10 @@ Changelog
 0.4 - unreleased
 ----------------
 
+* Avoid a site error if the mail cannot be sent, e.g. because the mail
+  server is down.
+  [optilude]
+
 * Avoid throwing an exception on encoded strings in the replacer.
   [optilude]
 
