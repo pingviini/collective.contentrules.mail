@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.4 - unreleased
+0.4 - 2009-09-06
 ----------------
 
 * Avoid a site error if the mail cannot be sent, e.g. because the mail
