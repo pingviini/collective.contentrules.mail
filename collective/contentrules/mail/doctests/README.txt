@@ -64,6 +64,7 @@ Edit this mail action and change message::
 Trigger an event using your mail action to send an email::
 First create a dummy mail host to simulate mail sent::
 
+    >>> from Products.CMFPlone.patches.securemailhost import secureSend
     >>> from Products.SecureMailHost.SecureMailHost import SecureMailHost
     >>> class DummySecureMailHost(SecureMailHost):
     ...     meta_type = 'Dummy secure Mail Host'
@@ -71,6 +72,8 @@ First create a dummy mail host to simulate mail sent::
     ...     def __init__(self, id):
     ...         self.id = id
     ...         self.sent = []
+    ...
+    ...     secureSend = secureSend
     ...
     ...     def _send(self, mfrom, mto, messageText, debug=False):
     ...         self.sent.append(messageText)
