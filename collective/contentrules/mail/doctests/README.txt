@@ -75,7 +75,7 @@ First create a dummy mail host to simulate mail sent::
     ...
     ...     secureSend = secureSend
     ...
-    ...     def _send(self, mfrom, mto, messageText, debug=False):
+    ...     def _send(self, mfrom, mto, messageText, debug=False, immediate=None):
     ...         self.sent.append(messageText)
     ...
     >>> from zope.component import getSiteManager
@@ -146,17 +146,16 @@ And finally execute mail action on this dummy folder::
     >>> ex()
     True
     >>> mail = dummyMailHost.sent[0]
-
-    >>> mail.get('Content-Type')
-    'text/plain; charset="utf-8"'
-    >>> mail.get('From')
-    'foo-source@bar.com'
-    >>> mail.get('To')
-    'foo@bar.com,bar@foo.com'
-    >>> mail.get('Subject')
-    '=?utf-8?q?Foo_subject?='
-    >>> mail.get_payload(decode=True)
-    'Foo message'
+    >>> print mail
+    Content-Type: text/plain; charset="utf-8"
+    MIME-Version: 1.0
+    Content-Transfer-Encoding: quoted-printable
+    Cc:
+    To: foo@bar.com,bar@foo.com
+    From: foo-source@bar.com
+    Subject: =?utf-8?q?Foo_subject?=
+    <BLANKLINE>
+    Foo message
 
 Previous email was sent in text/plain but you can change it to text/html::
     >>> basic.mimetype = 'html'
@@ -165,8 +164,9 @@ Previous email was sent in text/plain but you can change it to text/html::
     >>> ex()
     True
     >>> mail = dummyMailHost.sent[0]
-    >>> mail.get('Content-Type')
-    'text/html; charset="utf-8"'
+    >>> print mail
+    Content-Type: text/html; charset="utf-8"
+    ...
 
 Previous email actions were very basic : mail actions provides also word subsitution feature.
 Email action uses IEmailReplacer adapter on each triggered event object to extract some variables.
@@ -202,13 +202,14 @@ Execute email action with word substitution::
     >>> ex()
     True
     >>> mail = dummyMailHost.sent[0]
-    >>> mail.get('Content-Type')
-    'text/html; charset="utf-8"'
-    >>> mail.get('From')
-    'Site Administrator <foo-manager@bar.com>'
-    >>> mail.get('To')
-    'foo@bar.com'
-    >>> mail.get('Subject')
-    '=?utf-8?q?New_object_=3A_=22Foo_folder=22?='
-    >>> mail.get_payload(decode=True)
-    'A <a href="http://foo/folder">new object</a> has been added by dummy fullname.'
+    >>> print mail
+    Content-Type: text/html; charset="utf-8"
+    MIME-Version: 1.0
+    Content-Transfer-Encoding: quoted-printable
+    Cc:
+    To: foo@bar.com
+    From: Site Administrator <foo-manager@bar.com>
+    Subject: =?utf-8?q?New_object_=3A_=22Foo_folder=22?=
+    <BLANKLINE>
+    A <a href=3D"http://foo/folder">new object</a> has been added by dummy full=
+    name.
