@@ -41,19 +41,9 @@ class TestContentrulesGSLayer(PloneSite):
     
     @classmethod
     def setUp(cls):
-        
         fiveconfigure.debug_mode = True
         zcml.load_string(zcml_string)
         fiveconfigure.debug_mode = False
-        
-        app = ZopeTestCase.app()
-        portal = app.plone
-        
-        portal_setup = portal.portal_setup
-        portal_setup.runAllImportStepsFromProfile('profile-collective.contentrules.mail:testing')
-        
-        commit()
-        ZopeTestCase.close(app)
 
     @classmethod
     def tearDown(cls):
@@ -72,8 +62,10 @@ class TestGenericSetup(TestCase):
     layer = TestContentrulesGSLayer
     
     def afterSetUp(self):
+        portal_setup = self.portal.portal_setup
+        portal_setup.runAllImportStepsFromProfile('profile-collective.contentrules.mail:testing')
         self.storage = getUtility(IRuleStorage)
-    
+
     def testRuleInstalled(self):
         self.failUnless('test1' in self.storage)
         

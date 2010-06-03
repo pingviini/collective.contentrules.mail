@@ -187,6 +187,7 @@ Execute email action with word substitution::
 
     >>> action = MailAction()
     >>> self.portal._updateProperty('email_from_address', 'foo-manager@bar.com')
+    >>> self.portal._updateProperty('email_from_name', 'Site Administrator')
     >>> action.model = 'collective.contentrules.mail.model.base'
     >>> action.mimetype = 'html'
     >>> action.source = ''
