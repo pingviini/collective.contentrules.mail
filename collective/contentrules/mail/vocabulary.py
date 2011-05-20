@@ -17,7 +17,11 @@
 from zope.component import getUtilitiesFor
 from zope.interface import implements
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
-from zope.app.schema.vocabulary import IVocabularyFactory
+
+try:
+    from zope.app.schema.vocabulary import IVocabularyFactory
+except: # Plone >= 4.1
+    from zope.schema.interfaces import IVocabularyFactory
 
 from collective.contentrules.mail.interfaces import IMailModel
 from collective.contentrules.mail import MessageFactory as _
