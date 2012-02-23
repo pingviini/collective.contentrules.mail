@@ -232,8 +232,7 @@ action or enter an email in the portal properties"
             mailhost.secureSend(message, recipients, source,
                                 subject=subject, subtype=mimetype,
                                 mcc=cc, mbcc=bcc,
-                                charset=email_charset, debug=False,
-                                From=source)
+                                charset=email_charset, debug=False)
         except (MailHostError, SMTPException,), e:
             LOG.exception(u"Failed to send mail")
             return False
