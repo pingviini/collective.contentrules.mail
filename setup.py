@@ -25,6 +25,7 @@ setup(name='collective.contentrules.mail',
       install_requires=[
           'setuptools',
           # -*- Extra requirements: -*-
+          'zope.app.schema',
       ],
       entry_points="""
       [z3c.autoinclude.plugin]
