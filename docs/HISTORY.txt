@@ -4,8 +4,8 @@ Changelog
 0.7 (unreleased)
 ----------------
 
-- Nothing changed yet.
-
+- Moved to https://github.com/collective/collective.contentrules.mail
+  [maurits]
 
 0.6 (2012-02-23)
 ----------------
