@@ -27,13 +27,13 @@
 
   <include package=".actions" />
   <include package=".browser" />
-  
-  
+
+
   <five:implements
       class="Products.Archetypes.ExtensibleMetadata.ExtensibleMetadata"
       interface="Products.CMFCore.interfaces.IMutableDublinCore"
       />
-      
+
   <genericsetup:registerProfile
     name="default"
     title="collective.contentrules.mail"

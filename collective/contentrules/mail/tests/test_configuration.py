@@ -28,30 +28,30 @@ zcml_string = """\
     <gs:registerProfile
         name="testing"
         title="collective.contentrules.mail testing"
-        description="Used for testing only" 
+        description="Used for testing only"
         directory="tests/profiles/testing"
         for="Products.CMFCore.interfaces.ISiteRoot"
         provides="Products.GenericSetup.interfaces.EXTENSION"
         />
-        
+
 </configure>
 """
 
 class TestContentrulesGSLayer(PloneSite):
-    
+
     @classmethod
     def setUp(cls):
-        
+
         fiveconfigure.debug_mode = True
         zcml.load_string(zcml_string)
         fiveconfigure.debug_mode = False
-        
+
         app = ZopeTestCase.app()
         portal = app.plone
-        
+
         portal_setup = portal.portal_setup
         portal_setup.runAllImportStepsFromProfile('profile-collective.contentrules.mail:testing')
-        
+
         commit()
         ZopeTestCase.close(app)
 
@@ -59,24 +59,24 @@ class TestContentrulesGSLayer(PloneSite):
     def tearDown(cls):
         app = ZopeTestCase.app()
         portal = app.plone
-        
+
         storage = getUtility(IRuleStorage, context=portal)
         for key in list(storage.keys()):
             del storage[key]
-        
+
         commit()
         ZopeTestCase.close(app)
 
 class TestGenericSetup(TestCase):
 
     layer = TestContentrulesGSLayer
-    
+
     def afterSetUp(self):
         self.storage = getUtility(IRuleStorage)
-    
+
     def testRuleInstalled(self):
         self.failUnless('test1' in self.storage)
-        
+
     def testRulesConfigured(self):
         rule1 = self.storage['test1']
         self.assertEquals("Test rule 1", rule1.title)
@@ -84,13 +84,13 @@ class TestGenericSetup(TestCase):
         self.assertEquals(IObjectModifiedEvent, rule1.event)
         self.assertEquals(True, rule1.enabled)
         self.assertEquals(False, rule1.stop)
-        
+
         self.assertEquals(2, len(rule1.conditions))
         self.assertEquals("plone.conditions.PortalType", rule1.conditions[0].element)
         self.assertEquals(["Document", "News Item"], list(rule1.conditions[0].check_types))
         self.assertEquals("plone.conditions.Role", rule1.conditions[1].element)
         self.assertEquals(["Manager"], list(rule1.conditions[1].role_names))
-        
+
         self.assertEquals(1, len(rule1.actions))
         self.assertEquals("collective.contentrules.mail.actions.Mail", rule1.actions[0].element)
         self.assertEquals("collective.contentrules.mail.model.base", rule1.actions[0].model)
@@ -99,33 +99,33 @@ class TestGenericSetup(TestCase):
         self.assertEquals("${owner_emails}", rule1.actions[0].recipients)
         self.assertEquals(u"Your content was modified", rule1.actions[0].subject)
         self.assertEquals(u"Your content ${title} was modified.", rule1.actions[0].message)
-        
+
     def testRuleAssigned(self):
         assignable = IRuleAssignmentManager(self.portal.news)
         self.assertEquals(1, len(assignable))
-        
+
         self.assertEquals(True, assignable['test1'].enabled)
         self.assertEquals(False, assignable['test1'].bubbles)
-        
+
     def testAssignmentOrdering(self):
         assignable = IRuleAssignmentManager(self.portal.news)
         self.assertEquals([u'test1'], assignable.keys())
-        
+
     def testImportTwice(self):
         portal_setup = self.portal.portal_setup
         time.sleep(1) # avoid timestamp colission
         portal_setup.runAllImportStepsFromProfile('profile-collective.contentrules.mail:testing')
-        
+
         # We should get the same results as before
         self.testRuleInstalled()
         self.testRulesConfigured()
         self.testRuleAssigned()
-        
+
     def testExport(self):
         site = self.portal
         context = TarballExportContext(self.portal.portal_setup)
         exporter = getMultiAdapter((site, context), IBody, name=u'plone.contentrules')
-        
+
         expected = """\
 <?xml version="1.0"?>
 <contentrules>
@@ -164,7 +164,7 @@ class TestGenericSetup(TestCase):
 
         body = exporter.body
         self.assertEquals(expected.strip(), body.strip(), body)
-        
+
 def test_suite():
     from unittest import TestSuite, makeSuite
     suite = TestSuite()

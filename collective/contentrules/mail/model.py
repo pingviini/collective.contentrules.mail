@@ -24,7 +24,7 @@ from collective.contentrules.mail import MessageFactory as _
 
 class MailModel(object):
     """A mail model described by interface.
-    
+
     Create instances of this (as shown for DefaultMailModel below) and
     register these as unique named utilities providing IMailModel.
     """

@@ -44,7 +44,7 @@ class MailReplacer(object):
         roles = set(roles)
         local_roles = self.acl_users._getAllLocalRoles(self.context)
         emails = []
-        
+
         for role in roles:
             members = self.acl_users.portal_role_manager.listAssignedPrincipals(role)
             for member_id in members:
@@ -54,11 +54,11 @@ class MailReplacer(object):
             # Check if local roles has those that we wanted to extract
             if not roles.intersection(item_roles):
                 continue
-            
+
             emails += self._getPrincipalEmail(item_id)
-        
+
         return set(emails)
-    
+
     def _getPrincipalEmail(self, principal_id):
         emails = set()
         members = set()
@@ -80,13 +80,13 @@ class MailReplacer(object):
                 continue
 
             emails.add(email)
-        
+
         return emails
 
     @property
     def owner_emails(self):
         return ", ".join(self._getRoleEmails(['Owner']))
-    
+
     @property
     def reader_emails(self):
         return ", ".join(self._getRoleEmails(['Reader']))
@@ -98,7 +98,7 @@ class MailReplacer(object):
     @property
     def editor_emails(self):
         return ", ".join(self._getRoleEmails(['Editor']))
-    
+
     @property
     def reviewer_emails(self):
         return ", ".join(self._getRoleEmails(['Reviewer']))

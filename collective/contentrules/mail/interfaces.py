@@ -21,7 +21,7 @@ from collective.contentrules.mail import MessageFactory as _
 
 class IMailModel(Interface):
     """A named utility providing a mail model.
-    
+
     The mail content rule will allow the user ot pick a mail model based on
     a vocabulary of all named utilities providing this interface. When the
     content rule action is executed, the object being acted upon will be
@@ -49,7 +49,7 @@ class IMailReplacer(Interface):
     """Interface providing variables which can be used in mail fields:
     source, recipients, subject, text. This is the default implementation,
     which should work on any CMF content providing the IDublinCore interface.
-    
+
     It is possible to extend this with other attributes and provide a new
     IMailModel utility with a different interface provided as the
     `replacer_interface`.

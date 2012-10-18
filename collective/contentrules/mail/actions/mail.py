@@ -104,7 +104,7 @@ class MailAction(SimpleItem):
     cc = ''
     bcc = ''
     message = ''
-    
+
     element = 'collective.contentrules.mail.actions.Mail'
 
     @property
@@ -144,7 +144,7 @@ class MailActionExecutor(object):
         if replacer is None:
             LOG.debug(u"Could not send email. The replacer is not applicable for this type of object.")
             return False
-        
+
         words = {}
         for word_id in getFieldNamesInOrder(replacer_interface):
             replacement_value = getattr(replacer, word_id)
@@ -160,16 +160,16 @@ class MailActionExecutor(object):
                 text = text.replace(u"${%s}" % word_id, replacement_value)
 
             return text.encode(site_charset)
-        
+
         source = self.element.source
         if source:
             source = substitute(self.element.source)
-        recipients = substitute(self.element.recipients)    
+        recipients = substitute(self.element.recipients)
         cc = substitute(self.element.cc)
         bcc = substitute(self.element.bcc)
         subject = substitute(self.element.subject)
         message = substitute(self.element.message)
-        
+
         def processRecipients(recipients=''):
             address_list = []
             for email in recipients.split(','):
@@ -179,12 +179,12 @@ class MailActionExecutor(object):
                     continue
                 address_list.append(email)
             return address_list
-        
+
         # Process recipients
         recipient_list = processRecipients(recipients)
         cc_list = [e for e in processRecipients(cc) if e not in recipients]
         bcc_list = [e for e in processRecipients(bcc) if e not in recipients]
-        
+
         if not recipient_list:
             # Because there are no recipients, do not send email
             LOG.info(u"""Do not send email "%s": no recipients defined.""" %
@@ -194,9 +194,9 @@ class MailActionExecutor(object):
         recipients = ",".join(recipient_list)
         cc = ",".join(cc_list)
         bcc = ",".join(bcc_list)
-        
+
         # Process source
-        
+
         if not source:
             # no source provided, looking for the site wide from email
             # address
@@ -210,7 +210,7 @@ action or enter an email in the portal properties"
             source = "%s <%s>" % (from_name, from_address)
 
         # Encode text using mail charset
-        
+
         if email_charset != site_charset:
             source = source.decode(site_charset).encode(email_charset)
             recipients = recipients.decode(site_charset).encode(email_charset)
@@ -227,7 +227,7 @@ action or enter an email in the portal properties"
                 "You must have a Mailhost utility to execute this action"
 
         mimetype = self.element.mimetype
-        
+
         try:
             mailhost.secureSend(message, recipients, source,
                                 subject=subject, subtype=mimetype,
@@ -236,7 +236,7 @@ action or enter an email in the portal properties"
         except (MailHostError, SMTPException,), e:
             LOG.exception(u"Failed to send mail")
             return False
-        
+
         return True
 
 class MailAddForm(AddForm):
