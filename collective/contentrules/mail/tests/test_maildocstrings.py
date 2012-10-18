@@ -25,9 +25,9 @@ import sys
 import os
 
 from zope.testing import doctest
-from zope.publisher.browser import TestRequest
 
 current_dir = os.path.abspath(os.path.dirname(__file__))
+
 
 def doc_suite(test_dir, globs=None):
     """Returns a test suite, based on doc tests strings found in /*.py"""
@@ -55,8 +55,8 @@ def doc_suite(test_dir, globs=None):
             continue
         test = test.replace('.py', '')
         suite.append(doctest.DocTestSuite('collective.contentrules.mail.%s' % test,
-                                            optionflags=flags,
-                                            globs=globs))
+                                          optionflags=flags,
+                                          globs=globs))
 
     # filtering files on extension
     docs = [doc for doc in
@@ -64,17 +64,18 @@ def doc_suite(test_dir, globs=None):
     docs = [doc for doc in docs if not doc.startswith('__')]
 
     for test in docs:
-        fd = open(os.path.join(package_dir,'browser', test))
+        fd = open(os.path.join(package_dir, 'browser', test))
         content = fd.read()
         fd.close()
         if '>>> ' not in content:
             continue
         test = test.replace('.py', '')
         suite.append(doctest.DocTestSuite('collective.contentrules.mail.browser.%s' % test,
-                                            optionflags=flags,
-                                            globs=globs))
+                                          optionflags=flags,
+                                          globs=globs))
 
     return unittest.TestSuite(suite)
+
 
 def test_suite():
     """returns the test suite"""
@@ -82,4 +83,3 @@ def test_suite():
 
 if __name__ == '__main__':
     unittest.main(defaultTest='test_suite')
-

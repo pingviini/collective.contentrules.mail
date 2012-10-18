@@ -19,12 +19,15 @@ from zope.interface import implements
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 
 try:
-    from zope.app.schema.vocabulary import IVocabularyFactory
-except: # Plone >= 4.1
     from zope.schema.interfaces import IVocabularyFactory
+    IVocabularyFactory  # pyflakes
+except ImportError:
+    # BBB for Plone < 4.1
+    from zope.app.schema.vocabulary import IVocabularyFactory
 
 from collective.contentrules.mail.interfaces import IMailModel
 from collective.contentrules.mail import MessageFactory as _
+
 
 class ModelVocabulary(object):
     """Vocabulary factory listing all mail models
@@ -45,6 +48,7 @@ class ModelVocabulary(object):
         return SimpleVocabulary(terms)
 
 ModelVocabularyFactory = ModelVocabulary()
+
 
 class MimetypeVocabulary(object):
     """Vocabulary factory listing mail mimetypes

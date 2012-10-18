@@ -24,6 +24,7 @@ from kss.core import KSSView
 
 from collective.contentrules.mail.interfaces import IMailModel
 
+
 class ModelKSSView(KSSView):
     help_template = ViewPageTemplateFile("templates/model.pt")
 
@@ -43,6 +44,7 @@ class ModelKSSView(KSSView):
         core.replaceInnerHTML('#mail-model .modelDescription', help)
         return self.render()
 
+
 class ModelWidget(DropdownWidget):
 
     help_template = ViewPageTemplateFile("templates/model.pt")
@@ -56,8 +58,6 @@ class ModelWidget(DropdownWidget):
         """See IBrowserWidget."""
         value = self._getFormValue()
         contents = []
-        have_results = False
-
         contents.append(self._div('value', self.renderValue(value)))
         contents.append(self._emptyMarker())
 

@@ -25,12 +25,12 @@ import sys
 import os
 
 from Testing.ZopeTestCase import FunctionalDocFileSuite
-from zope.publisher.browser import TestRequest
 from Products.Five.testbrowser import Browser
 
 from base import TestCase
 
 current_dir = os.path.dirname(__file__)
+
 
 def doc_suite(test_dir, setUp=None, tearDown=None, globs=None):
     """Returns a test suite, based on doctests found in /doctest."""
@@ -69,10 +69,10 @@ def doc_suite(test_dir, setUp=None, tearDown=None, globs=None):
 
     return unittest.TestSuite(suite)
 
+
 def test_suite():
     """returns the test suite"""
     return doc_suite(current_dir)
 
 if __name__ == '__main__':
     unittest.main(defaultTest='test_suite')
-

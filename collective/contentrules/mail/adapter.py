@@ -23,6 +23,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.interfaces import IDublinCore
 from collective.contentrules.mail.interfaces import IMailReplacer
 
+
 class MailReplacer(object):
     """Provides attributes which can be used in a mail model"""
 
@@ -107,7 +108,7 @@ class MailReplacer(object):
     def review_state(self):
         try:
             return self.wtool.getInfoFor(self.context, "review_state")
-        except WorkflowException, e:
+        except WorkflowException:
             return ''
 
     @property

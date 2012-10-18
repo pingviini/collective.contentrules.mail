@@ -19,12 +19,8 @@ Generic Test case for collective.contentrules.mail doctest
 """
 __docformat__ = 'restructuredtext'
 
-from zope.app.tests import placelesssetup
-
-from Products.Five import zcml
-import Products.Five
-
 from DateTime import DateTime
+
 
 def addMember(self, username, fullname="", email="", roles=('Member',), last_login_time=None):
     """Create an new member
@@ -34,7 +30,8 @@ def addMember(self, username, fullname="", email="", roles=('Member',), last_log
     self.portal.portal_membership.addMember(username, 'secret', roles, [])
     member = self.portal.portal_membership.getMemberById(username)
     member.setMemberProperties({'fullname': fullname, 'email': email,
-                                'last_login_time': DateTime(last_login_time),})
+                                'last_login_time': DateTime(last_login_time)})
+
 
 def setUpDefaultMembers(self):
     """Setup default members"""
