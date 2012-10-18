@@ -201,7 +201,7 @@ Execute email action with word substitution::
     >>> mail.get('Content-Type')
     'text/html; charset="utf-8"'
     >>> mail.get('From')
-    'Site Administrator <foo-manager@bar.com>'
+    '=?utf-8?q?Site_Administrator_?=<foo-manager@bar.com>'
     >>> mail.get('To')
     'foo@bar.com'
     >>> mail.get('Subject')
