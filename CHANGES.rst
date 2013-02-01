@@ -1,8 +1,8 @@
 Changelog
 =========
 
-0.7 (unreleased)
-----------------
+0.7-FHNW1 (2013-02-01)
+----------------------
 
 - Moved to https://github.com/collective/collective.contentrules.mail
   [maurits]
