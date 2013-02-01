@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.7 (unreleased)
+----------------
+
+- Nothing changed yet.
+
+
 0.7-FHNW1 (2013-02-01)
 ----------------------
 

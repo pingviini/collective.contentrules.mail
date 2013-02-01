@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '0.7-FHNW1'
+version = '0.7.dev0'
 
 setup(name='collective.contentrules.mail',
       version=version,
