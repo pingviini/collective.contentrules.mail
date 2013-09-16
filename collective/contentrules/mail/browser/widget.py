@@ -18,7 +18,7 @@ from zope.component import getUtility
 from zope.app.form.browser.itemswidgets import DropdownWidget
 from zope.component.interfaces import ComponentLookupError
 
-from zope.app.pagetemplate import ViewPageTemplateFile
+from zope.browserpage.viewpagetemplatefile import ViewPageTemplateFile
 
 from kss.core import KSSView
 
